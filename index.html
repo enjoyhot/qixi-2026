@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>💕 给你的一封信</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            background: #1a0a2e;
+        }
+
+        /* 密码页面 */
+        #password-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #1a0a2e 0%, #2d1b69 50%, #44318d 100%);
+            animation: bgShift 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes bgShift {
+            0% { background: linear-gradient(135deg, #1a0a2e 0%, #2d1b69 50%, #44318d 100%); }
+            100% { background: linear-gradient(135deg, #2d1b69 0%, #44318d 50%, #6b3fa0 100%); }
+        }
+
+        .lock-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .password-hint {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            margin-bottom: 30px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .password-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .password-input {
+            width: 240px;
+            padding: 12px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .password-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .password-input:focus {
+            border-color: #ff6b9d;
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.3);
+        }
+
+        .submit-btn {
+            width: 240px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #ff6b9d, #c44569);
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 107, 157, 0.4);
+        }
+
+        .error-msg {
+            color: #ff6b6b;
+            font-size: 13px;
+            margin-top: 10px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .error-msg.show {
+            opacity: 1;
+        }
+
+        /* 祝福页面 */
+        #blessing-page {
+            display: none;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0c0015 0%, #1a0a2e 30%, #2d1b69 100%);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 通用 section */
+        .section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        .blessing-content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: fadeInUp 1.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .title {
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4, #ff9a9e);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientMove 3s ease infinite;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        @keyframes gradientMove {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 40px;
+            animation: fadeInUp 2s ease-out;
+            text-align: center;
+        }
+
+        .message {
+            max-width: 500px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 2.5s ease-out;
+        }
+
+        .message p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 15px;
+            line-height: 2;
+            text-align: center;
+        }
+
+        .message .highlight {
+            color: #ff9a9e;
+            font-weight: bold;
+        }
+
+        .scroll-hint {
+            margin-top: 40px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 13px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(8px); }
+        }
+
+        /* 第二屏 - 打字效果 */
+        .section-two {
+            background: linear-gradient(180deg, #2d1b69 0%, #1a0a2e 50%, #0f0620 100%);
+        }
+
+        .section-title {
+            font-size: 28px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .typewriter-container {
+            max-width: 500px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            min-height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .typewriter-text {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 16px;
+            line-height: 2.2;
+            text-align: center;
+            white-space: pre-wrap;
+        }
+
+        .typewriter-text .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 18px;
+            background: #ff9a9e;
+            margin-left: 2px;
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .replay-btn {
+            margin-top: 30px;
+            padding: 10px 25px;
+            border: 1px solid rgba(255, 107, 157, 0.5);
+            border-radius: 25px;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .replay-btn:hover {
+            background: rgba(255, 107, 157, 0.2);
+            border-color: #ff6b9d;
+            color: white;
+        }
+
+        /* 第三屏 - 互动拥抱 */
+        .section-three {
+            background: linear-gradient(180deg, #0f0620 0%, #1a0a2e 50%, #2d1b69 100%);
+        }
+
+        .hug-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .hug-btn {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 107, 157, 0.5);
+            background: radial-gradient(circle, rgba(255, 107, 157, 0.2), transparent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: glow 2s ease-in-out infinite alternate;
+            user-select: none;
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 20px rgba(255, 107, 157, 0.2); }
+            100% { box-shadow: 0 0 40px rgba(255, 107, 157, 0.5); }
+        }
+
+        .hug-btn:hover {
+            transform: scale(1.1);
+            border-color: #ff6b9d;
+        }
+
+        .hug-btn:active {
+            transform: scale(0.95);
+        }
+
+        .hug-counter {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+
+        .hug-counter span {
+            color: #ff9a9e;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .hug-message {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 15px;
+            text-align: center;
+            line-height: 1.8;
+            max-width: 300px;
+            min-height: 50px;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .hug-message.show {
+            opacity: 1;
+        }
+
+        /* 爱心爆炸效果 */
+        .heart-burst {
+            position: fixed;
+            pointer-events: none;
+            font-size: 20px;
+            animation: burstOut 1s ease-out forwards;
+            z-index: 999;
+        }
+
+        @keyframes burstOut {
+            0% { transform: scale(0) translate(0, 0); opacity: 1; }
+            100% { transform: scale(1) translate(var(--tx), var(--ty)); opacity: 0; }
+        }
+
+        /* 爱心飘落 */
+        .heart {
+            position: fixed;
+            top: -10%;
+            font-size: 20px;
+            animation: fall linear infinite;
+            z-index: 1;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 0.8; }
+            100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* 星星闪烁 */
+        .star {
+            position: fixed;
+            width: 3px;
+            height: 3px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s ease-in-out infinite alternate;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.2; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* 流星 */
+        .meteor {
+            position: fixed;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.6);
+            animation: meteorFall linear infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .meteor::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 80px;
+            height: 1px;
+            background: linear-gradient(to left, rgba(255, 255, 255, 0.6), transparent);
+            transform: rotate(-45deg);
+            transform-origin: 0 0;
+        }
+
+        @keyframes meteorFall {
+            0% { transform: translate(0, 0); opacity: 1; }
+            100% { transform: translate(-300px, 300px); opacity: 0; }
+        }
+
+        /* 底部 */
+        .final-footer {
+            padding: 40px 20px;
+            text-align: center;
+            background: linear-gradient(180deg, #2d1b69 0%, #0c0015 100%);
+        }
+
+        .final-footer p {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 13px;
+            line-height: 2;
+        }
+
+        .final-footer .love-date {
+            color: #ff9a9e;
+        }
+
+        /* 响应式 - 手机适配 */
+        @media (max-width: 480px) {
+            .title { font-size: 32px; }
+            .subtitle { font-size: 16px; }
+            .message { padding: 20px; margin: 0 10px; }
+            .message p { font-size: 14px; line-height: 2.2; }
+            .section-title { font-size: 22px; }
+            .typewriter-container { padding: 20px; margin: 0 10px; min-height: 280px; }
+            .typewriter-text { font-size: 14px; line-height: 2.4; }
+            .hug-btn { width: 130px; height: 130px; font-size: 50px; }
+            .password-input { width: 260px; }
+            .submit-btn { width: 260px; }
+            .section { padding: 30px 15px; }
+        }
+
+        @media (max-width: 375px) {
+            .title { font-size: 26px; }
+            .typewriter-container { min-height: 320px; }
+            .typewriter-text { font-size: 13px; }
+        }
+
+        /* 安全区域适配（刘海屏） */
+        @supports (padding-top: env(safe-area-inset-top)) {
+            body {
+                padding-top: env(safe-area-inset-top);
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 密码验证页 -->
+    <div id="password-page">
+        <div class="lock-icon">💌</div>
+        <p class="password-hint">小古月，这是一封写给你的信<br>请输入我们的专属密码 💕</p>
+        <div class="password-container">
+            <input type="password" class="password-input" id="pwd-input" placeholder="输入密码..." maxlength="20">
+            <button class="submit-btn" id="submit-btn">打开信封 💗</button>
+            <p class="error-msg" id="error-msg">密码不对哦，再想想～</p>
+        </div>
+    </div>
+
+    <!-- 祝福页面 -->
+    <div id="blessing-page">
+
+        <!-- 第一屏：主祝福 -->
+        <div class="section section-one">
+            <div class="blessing-content">
+                <h1 class="title">七夕快乐 🌹</h1>
+                <p class="subtitle">今天是属于我们的日子</p>
+                <div class="message">
+                    <p>
+                        老公老婆都不是神人<br>
+                        无法完全做到未雨绸缪<br><br>
+                        但我们可以<br>
+                        <span class="highlight">立足现在，展望未来</span><br><br>
+                        携手走过的每一天<br>
+                        都是最好的安排 💕
+                    </p>
+                </div>
+                <p class="scroll-hint">👇 继续往下滑 👇</p>
+            </div>
+        </div>
+
+        <!-- 第二屏：打字效果的心里话 -->
+        <div class="section section-two">
+            <h2 class="section-title">想对你说的话 ✉️</h2>
+            <div class="typewriter-container">
+                <p class="typewriter-text" id="typewriter"></p>
+            </div>
+            <button class="replay-btn" id="replay-btn" onclick="startTypewriter()">🔄 再看一遍</button>
+        </div>
+
+        <!-- 第三屏：互动拥抱 -->
+        <div class="section section-three">
+            <h2 class="section-title">隔空拥抱 🤗</h2>
+            <div class="hug-container">
+                <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 10px;">（使劲戳！）</p>
+                <div class="hug-btn" id="hug-btn" onclick="sendHug()">
+                    🫂
+                </div>
+                <p class="hug-counter">你已经收到了 <span id="hug-count">0</span> 个拥抱</p>
+                <p class="hug-message" id="hug-message"></p>
+            </div>
+        </div>
+
+        <!-- 底部 -->
+        <div class="final-footer">
+            <p>
+                从 <span class="love-date">2023.01.01</span> 到永远<br>
+                谢谢你一直在，小古月 ❤️
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // ========== 密码验证 ==========
+        const PASSWORD = '20230101';
+        const pwdInput = document.getElementById('pwd-input');
+        const submitBtn = document.getElementById('submit-btn');
+        const errorMsg = document.getElementById('error-msg');
+        const passwordPage = document.getElementById('password-page');
+        const blessingPage = document.getElementById('blessing-page');
+
+        function verify() {
+            if (pwdInput.value === PASSWORD) {
+                passwordPage.style.display = 'none';
+                blessingPage.style.display = 'block';
+                document.body.style.overflow = 'auto';
+                createHearts();
+                createStars();
+                createMeteors();
+                setupScrollObserver();
+            } else {
+                errorMsg.classList.add('show');
+                pwdInput.style.borderColor = '#ff6b6b';
+                setTimeout(() => {
+                    errorMsg.classList.remove('show');
+                    pwdInput.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                }, 2000);
+            }
+        }
+
+        submitBtn.addEventListener('click', verify);
+        pwdInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') verify();
+        });
+
+        // ========== 打字效果 ==========
+        const loveWords = `小古月，我知道有时候让你觉得委屈了
+我不是不在乎你
+只是有时候反应慢了半拍
+
+我不想说什么大话空话
+我只知道一个事实——
+选了你，就不会让你一个人扛
+
+脾气不好的时候骂我就行
+我扛得住 😂
+
+七夕快乐，我的小古月 ❤️`;
+
+        let typewriterTimer = null;
+
+        function startTypewriter() {
+            const el = document.getElementById('typewriter');
+            el.innerHTML = '';
+            let i = 0;
+            if (typewriterTimer) clearInterval(typewriterTimer);
+
+            typewriterTimer = setInterval(() => {
+                if (i < loveWords.length) {
+                    const char = loveWords[i];
+                    // 移除旧光标
+                    const oldCursor = el.querySelector('.cursor');
+                    if (oldCursor) oldCursor.remove();
+
+                    if (char === '\n') {
+                        el.innerHTML += '<br>';
+                    } else {
+                        el.innerHTML += char;
+                    }
+                    el.innerHTML += '<span class="cursor"></span>';
+                    i++;
+                } else {
+                    clearInterval(typewriterTimer);
+                }
+            }, 80);
+        }
+
+        // ========== 滚动观察器 ==========
+        let typewriterStarted = false;
+        function setupScrollObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !typewriterStarted) {
+                        typewriterStarted = true;
+                        startTypewriter();
+                    }
+                });
+            }, { threshold: 0.3 });
+
+            const section2 = document.querySelector('.section-two');
+            if (section2) observer.observe(section2);
+        }
+
+        // ========== 拥抱互动 ==========
+        let hugCount = 0;
+        const hugMessages = [
+            '抱紧你 💕',
+            '我在呢',
+            '生气就捶我，别憋着',
+            '你是对的，听你的',
+            '今晚想吃什么？我去买',
+            '委屈了就说，我听着',
+            '不跟你讲道理，只想哄你',
+            '气消了没？没消再抱一下',
+            '你是我的，谁都不能欺负',
+            '抱完了没？没抱够继续',
+            '我笨，但我是你的笨蛋',
+            '下辈子还选你（逃不掉了）',
+        ];
+
+        function sendHug() {
+            hugCount++;
+            document.getElementById('hug-count').textContent = hugCount;
+
+            // 显示随机消息
+            const msg = hugMessages[(hugCount - 1) % hugMessages.length];
+            const msgEl = document.getElementById('hug-message');
+            msgEl.classList.remove('show');
+            msgEl.textContent = msg;
+            setTimeout(() => msgEl.classList.add('show'), 50);
+
+            // 爱心爆炸效果
+            createHeartBurst();
+        }
+
+        function createHeartBurst() {
+            const btn = document.getElementById('hug-btn');
+            const rect = btn.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            const emojis = ['❤️', '💕', '💗', '💖', '💓', '✨', '🌟'];
+
+            for (let i = 0; i < 10; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart-burst';
+                heart.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                heart.style.left = centerX + 'px';
+                heart.style.top = centerY + 'px';
+
+                const angle = (i / 10) * 360;
+                const distance = 50 + Math.random() * 60;
+                const tx = Math.cos(angle * Math.PI / 180) * distance;
+                const ty = Math.sin(angle * Math.PI / 180) * distance;
+                heart.style.setProperty('--tx', tx + 'px');
+                heart.style.setProperty('--ty', ty + 'px');
+
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 1000);
+            }
+        }
+
+        // ========== 背景动画 ==========
+        function createHearts() {
+            const hearts = ['❤️', '💕', '💗', '💖', '✨', '🌸', '💜'];
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.fontSize = (Math.random() * 15 + 12) + 'px';
+                heart.style.animationDuration = (Math.random() * 5 + 6) + 's';
+                heart.style.opacity = Math.random() * 0.4 + 0.2;
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 11000);
+            }, 700);
+        }
+
+        function createStars() {
+            for (let i = 0; i < 80; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.top = Math.random() * 100 + 'vh';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
+                document.body.appendChild(star);
+            }
+        }
+
+        function createMeteors() {
+            setInterval(() => {
+                const meteor = document.createElement('div');
+                meteor.className = 'meteor';
+                meteor.style.left = (Math.random() * 80 + 20) + 'vw';
+                meteor.style.top = (Math.random() * 30) + 'vh';
+                meteor.style.animationDuration = (Math.random() * 1 + 0.8) + 's';
+                document.body.appendChild(meteor);
+                setTimeout(() => meteor.remove(), 2000);
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
