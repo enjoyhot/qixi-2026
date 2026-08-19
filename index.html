@@ -419,12 +419,44 @@
 
         /* 底部 */
         .final-footer {
-            padding: 40px 20px;
+            padding: 60px 20px 40px;
             text-align: center;
             background: linear-gradient(180deg, #2d1b69 0%, #0c0015 100%);
         }
 
-        .final-footer p {
+        .final-note {
+            margin-bottom: 50px;
+        }
+
+        .note-hint {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+            margin-bottom: 20px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .note-content {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .note-content p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            line-height: 2;
+            text-align: center;
+        }
+
+        .note-content .highlight {
+            color: #ff9a9e;
+            font-weight: bold;
+        }
+
+        .footer-date {
             color: rgba(255, 255, 255, 0.4);
             font-size: 13px;
             line-height: 2;
@@ -482,18 +514,8 @@
         <!-- 第一屏：主祝福 -->
         <div class="section section-one">
             <div class="blessing-content">
-                <h1 class="title">七夕快乐 🌹</h1>
+                <h1 class="title">小古月<br>七夕快乐 🌹</h1>
                 <p class="subtitle">今天是属于我们的日子</p>
-                <div class="message">
-                    <p>
-                        老公老婆都不是神人<br>
-                        无法完全做到未雨绸缪<br><br>
-                        但我们可以<br>
-                        <span class="highlight">立足现在，展望未来</span><br><br>
-                        携手走过的每一天<br>
-                        都是最好的安排 💕
-                    </p>
-                </div>
                 <p class="scroll-hint">👇 继续往下滑 👇</p>
             </div>
         </div>
@@ -522,7 +544,20 @@
 
         <!-- 底部 -->
         <div class="final-footer">
-            <p>
+            <div class="final-note">
+                <p class="note-hint">👇 还有一些想说的话 👇</p>
+                <div class="note-content">
+                    <p>
+                        老公老婆都不是神人<br>
+                        无法完全做到未雨绸缪<br><br>
+                        但我们可以<br>
+                        <span class="highlight">立足现在，展望未来</span><br><br>
+                        携手走过的每一天<br>
+                        都是最好的安排 💕
+                    </p>
+                </div>
+            </div>
+            <p class="footer-date">
                 从 <span class="love-date">2023.01.01</span> 到永远<br>
                 谢谢你一直在，小古月 ❤️
             </p>
